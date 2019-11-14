@@ -13,18 +13,20 @@ const generateManifest = ({
   baseUrl: string;
   identifier: string;
 }) => build({
-  assets: [
-    {
-      kind: 'software-package',
-      url: `${baseUrl}/${identifier}.ipa`,
+  items: [{
+    assets: [
+      {
+        kind: 'software-package',
+        url: `${baseUrl}/${identifier}.ipa`,
+      },
+    ],
+    metadata: {
+      'bundle-identifier': bundleId,
+      'bundle-version': version,
+      kind: 'software',
+      title: appname,
     },
-  ],
-  metadata: {
-    'bundle-identifier': bundleId,
-    'bundle-version': version,
-    kind: 'software',
-    title: appname,
-  },
+  }],
 })
 
 export default generateManifest
