@@ -1,6 +1,7 @@
 import { copyFileSync, mkdirSync, writeFileSync } from 'fs'
 import path from 'path'
 import uuid from 'uuid'
+import glob from 'glob'
 import generateHtml from './generate-html'
 import generateManifest from './generate-manifest'
 
@@ -16,8 +17,35 @@ const ipaPath = env.IPA_PATH
 const apkPath = env.APK_PATH
 const identifier = uuid()
 
-const ios = !!ipaPath
-const android = !!apkPath
+let ios = false
+let android = false
+
+mkdirSync(output, { recursive: true })
+if (ipaPath) {
+  const ipas = glob.sync(ipaPath)
+  if (ipas.length === 0) {
+    console.warn('No ipa file found with provided path', ipaPath)
+  } else {
+    if (ipas.length > 1) {
+      console.log('Multiple ipa found. Using first one', ipas[0])
+    }
+    ios = true
+    copyFileSync(ipas[0], path.join(output, `${identifier}.ipa`))
+  }
+}
+
+if (apkPath) {
+  const apks = glob.sync(apkPath)
+  if (apks.length === 0) {
+    console.warn('No apk file found with provided path', apkPath)
+  } else {
+    if (apks.length > 1) {
+      console.log('Multiple apk found. Using first one', apks[0])
+    }
+    android = true
+    copyFileSync(apks[0], path.join(output, `${identifier}.apk`))
+  }
+}
 
 const opts = {
   bundleId,
@@ -28,10 +56,6 @@ const opts = {
   ios,
   android,
 }
-
-mkdirSync(output, { recursive: true })
-if (ipaPath) copyFileSync(ipaPath, path.join(output, `${identifier}.ipa`))
-if (apkPath) copyFileSync(apkPath, path.join(output, `${identifier}.apk`))
 
 writeFileSync(path.join(output, `${identifier}.html`), generateHtml(opts))
 
