@@ -12,7 +12,7 @@ const generateHtml = (opts: {
   baseUrl: string;
 }) => compile({
     ...opts,
-    time: moment().format(),
+    time: moment().utcOffset(8).toString(),
   })
 
 export default generateHtml
