@@ -60,7 +60,10 @@ const opts = {
 writeFileSync(path.join(output, `${identifier}.html`), generateHtml(opts))
 
 if (ios) {
-  writeFileSync(path.join(output, `${identifier}.plist`), generateManifest(opts))
+  writeFileSync(
+    path.join(output, `${identifier}.plist`),
+    generateManifest(opts),
+  )
 }
 
 console.log('Done', opts)
