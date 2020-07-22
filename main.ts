@@ -16,6 +16,7 @@ const appname = env.APPNAME
 const baseUrl = env.BASE_URL
 const ipaPath = env.IPA_PATH
 const apkPath = env.APK_PATH
+const aabPath = env.AAB_PATH
 const identifier = uuid()
 
 if (bundleId == null || appname == null || version == null || baseUrl == null) {
@@ -50,6 +51,19 @@ if (apkPath) {
     }
     android = true
     copyFileSync(apks[0], path.join(output, `${identifier}.apk`))
+  }
+}
+
+if (aabPath) {
+  const aabs = glob.sync(aabPath)
+  if (aabs.length === 0) {
+    console.warn('No apk file found with provided path', aabPath)
+  } else {
+    if (aabs.length > 1) {
+      console.log('Multiple apk found. Using first one', aabs[0])
+    }
+    android = true
+    copyFileSync(aabs[0], path.join(output, `${identifier}.aab`))
   }
 }
 
