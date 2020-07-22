@@ -2,6 +2,7 @@ import { copyFileSync, mkdirSync, writeFileSync } from 'fs'
 import path from 'path'
 import uuid from 'uuid'
 import glob from 'glob'
+import { exit } from 'process'
 import generateHtml from './generate-html'
 import generateManifest from './generate-manifest'
 
@@ -16,6 +17,11 @@ const baseUrl = env.BASE_URL
 const ipaPath = env.IPA_PATH
 const apkPath = env.APK_PATH
 const identifier = uuid()
+
+if (bundleId == null || appname == null || version == null || baseUrl == null) {
+  console.warn('Missing configuration environment variable. Abort. ')
+  exit(-1)
+}
 
 let ios = false
 let android = false
