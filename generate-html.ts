@@ -14,6 +14,7 @@ const generateHtml = (opts: {
   baseUrl: string
   ios: boolean
   android: boolean
+  iconPath?: string
 }): string =>
   compile({
     ...opts,

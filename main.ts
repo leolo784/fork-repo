@@ -17,6 +17,7 @@ const baseUrl = env.BASE_URL
 const ipaPath = env.IPA_PATH
 const apkPath = env.APK_PATH
 const aabPath = env.AAB_PATH
+const iconPath = env.ICON_PATH
 const identifier = uuid()
 
 if (bundleId == null || appname == null || version == null || baseUrl == null) {
@@ -75,6 +76,7 @@ const opts = {
   identifier,
   ios,
   android,
+  iconPath,
 }
 
 writeFileSync(path.join(output, `${identifier}.html`), generateHtml(opts))
