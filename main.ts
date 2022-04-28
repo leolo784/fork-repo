@@ -79,10 +79,6 @@ const opts = {
   iconPath,
 }
 
-if (iconPath != null) {
-  copyFileSync(iconPath, path.join(output, `${identifier}.png`))
-}
-
 writeFileSync(path.join(output, `${identifier}.html`), generateHtml(opts))
 
 if (ios) {
