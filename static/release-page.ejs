@@ -1,61 +1,253 @@
-<!DOCTYPE html
-  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+    <title><%= appname %></title>
+    <style type="text/css">
+      @import url(https://fonts.googleapis.com/earlyaccess/opensanshebrew.css);
 
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-  <title><%= appname %></title>
-  <style type="text/css">
-    body {
-      background: #fff;
-      margin: 0;
-      padding: 0;
-      font-family: arial, helvetica, sans-serif;
-      text-align: center;
-      padding: 10px;
-      color: #333;
-      font-size: 16px;
+      body {
+        background: linear-gradient(
+          30.13deg,
+          #151515 15.03%,
+          #24415f 39.71%,
+          #1b365c 54.93%,
+          #151515 87.33%
+        );
+        height: 100vh;
+        width: 100vw;
+        margin: 0;
+        padding: 0;
+        font-family: 'Open Sans Hebrew', serif;
+        text-align: center;
+        color: white;
+        font-size: 16px;
+      }
+
+      #root {
+        width: 100%;
+        height: 100%;
+      }
+
+      #container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 100px;
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+
+      #app-container {
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+        justify-content: space-around;
+        gap: 20px;
+        margin-bottom: 52px;
+      }
+
+      #app-info {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        gap: 70px;
+      }
+
+      #app-info-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      h1 {
+        margin: 0;
+        padding: 0;
+        font-size: 18px;
+      }
+
+      p {
+        text-align: left;
+        font-size: 14px;
+        color: #e0e0e0;
+        margin-top: 4px;
+        margin-bottom: 4px;
+      }
+
+      button {
+        width: 255px;
+        border-radius: 5px;
+        box-shadow: rgb(153 192 255 / 69%) 0px 0px 30px 0px;
+      }
+
+      img {
+        border-radius: 24px;
+      }
+
+      #install-button {
+        align-items: center;
+        background: #ffffff;
+        border: 0 solid #e2e8f0;
+        box-sizing: border-box;
+        color: #0b3356;
+        display: inline-flex;
+        font-family: Inter, sans-serif;
+        font-size: 16px;
+        font-weight: bold;
+        height: 48px;
+        justify-content: center;
+        line-height: 24px;
+        overflow-wrap: break-word;
+        padding: 24px;
+        text-decoration: none;
+        border-radius: 8px;
+        cursor: pointer;
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+      }
+
+      #install-text-container {
+        margin-top: 16px;
+        margin-bottom: 16px;
+      }
+
+      #install-text {
+        font-size: 16px;
+        text-align: center;
+        padding-left: 15px;
+        padding-right: 15px;
+      }
+
+      .link {
+        background: #ecf5ff;
+        border-top: 1px solid #fff;
+        border: 1px solid #dfebf8;
+        margin-top: 0.5em;
+        padding: 0.3em;
+      }
+
+      .link a {
+        text-decoration: none;
+        font-size: 15px;
+        display: block;
+        color: #069;
+      }
+    </style>
+  </head>
+  <script>
+    function isIOS() {
+      // https://stackoverflow.com/questions/9038625/detect-if-device-is-ios
+      return (
+        [
+          'iPad Simulator',
+          'iPhone Simulator',
+          'iPod Simulator',
+          'iPad',
+          'iPhone',
+          'iPod',
+        ].includes(navigator.platform) ||
+        // iPad on iOS 13 detection
+        (navigator.userAgent.includes('Mac') && 'ontouchend' in document)
+      )
     }
 
-    #container {
-      width: 300px;
-      margin: 0 auto;
+    function getMobileOperatingSystem() {
+      var userAgent = navigator.userAgent || navigator.vendor || window.opera
+
+      // Windows Phone must come first because its UA also contains "Android"
+      if (/windows phone/i.test(userAgent)) {
+        return 'Windows Phone'
+      }
+
+      if (/android/i.test(userAgent)) {
+        return 'Android'
+      }
+
+      if (isIOS()) {
+        return 'iOS'
+      }
+
+      return 'unknown'
     }
 
-    h1 {
-      margin: 0;
-      padding: 0;
-      font-size: 14px;
+    function onOpen(ios, android) {
+      var os = getMobileOperatingSystem()
+
+      if (os === 'iOS') {
+        if (ios === 'false') {
+          // if IOS app not available
+          alert('IOS app not available. No ipa file found with provided path.')
+          return
+        }
+
+        window.location.assign(
+          'itms-services://?action=download-manifest&url=<%= baseUrl %>/<%= identifier %>.plist',
+        )
+        return
+      }
+
+      if (os === 'Android') {
+        if (android === 'false') {
+          // if Android app not available
+          alert(
+            'Android app not available. No apk file found with provided path.',
+          )
+          return
+        }
+
+        window.location.assign('<%= baseUrl %>/<%= identifier %>.apk')
+        return
+      }
+
+      alert(
+        'Unsupported system. Please install this app in android or iOS device.',
+      )
     }
+  </script>
 
-    p {
-      font-size: 13px;
-    }
-
-    .link {
-      background: #ecf5ff;
-      border-top: 1px solid #fff;
-      border: 1px solid #dfebf8;
-      margin-top: .5em;
-      padding: .3em;
-    }
-
-    .link a {
-      text-decoration: none;
-      font-size: 15px;
-      display: block;
-      color: #069;
-    }
-  </style>
-</head>
-
-<body>
-  <div id="container">
-    <div class="link"><a href="itms-services://?action=download-manifest&url=<%= baseUrl %>/<%= identifier %>.plist">Tap Here to Install<br />
-      <%= appname %> (v<%= version %>)<br />On Your Device</a></div>
-    <p>Creation time: <%= time %></p>
-  </div>
-</body>
-
+  <body>
+    <div id="root">
+      <div id="container">
+        <div id="app-container">
+          <div id="app-icon-container">
+            <% if (iconPath) { %>
+            <img src="<%= identifier %>.png" />
+            <% } %>
+          </div>
+          <div id="app-info-container">
+            <div id="app-name-container">
+              <h1><%= appname %></h1>
+            </div>
+            <div id="app-info">
+              <div id="versionContainer">
+                <p>Version</p>
+                <p><%= version %></p>
+              </div>
+              <div id="releaseDayContainer">
+                <p>Released On</p>
+                <p><%= time %></p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="install-text-container">
+          <p id="install-text">
+            Click to install <%= appname %> On Your Device
+          </p>
+        </div>
+        <button
+          id="install-button"
+          type="button"
+          onclick="onOpen('<%= ios %>','<%= android %>')"
+        >
+          Install Now
+        </button>
+      </div>
+    </div>
+  </body>
 </html>

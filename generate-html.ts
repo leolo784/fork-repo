@@ -12,10 +12,12 @@ const generateHtml = (opts: {
   appname: string
   version: string
   baseUrl: string
+  ios: boolean
+  android: boolean
 }): string =>
   compile({
     ...opts,
-    time: moment().utcOffset(8).toString(),
+    time: moment().format('DD MMM, YYYY'),
   })
 
 export default generateHtml
